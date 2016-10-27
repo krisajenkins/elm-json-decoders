@@ -8,8 +8,10 @@ import Types exposing (..)
 
 decodeStation : Decoder Station
 decodeStation =
-    object1 Station
+    object3 Station
         (at [ "Title" ] string)
+        (at [ "Subtitle" ] (maybe string))
+        (at [ "SubscriptionRequired" ] bool)
 
 
 decodeGuideItem : Decoder (List Station)
@@ -17,10 +19,12 @@ decodeGuideItem =
     list decodeStation
 
 
-decodeStations : Decoder (List (List Station))
+decodeStations : Decoder (List Station)
 decodeStations =
     at [ "payload", "ContainerGuideItems", "containers" ]
-        (list (at [ "GuideItems" ] decodeGuideItem))
+        (Json.Decode.map List.concat
+            (list (at [ "GuideItems" ] decodeGuideItem))
+        )
 
 
 getStations : Cmd Msg
