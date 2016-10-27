@@ -6,9 +6,21 @@ import Task
 import Types exposing (..)
 
 
-decodeStations : Decoder (List Station)
+decodeStation : Decoder Station
+decodeStation =
+    object1 Station
+        (at [ "Title" ] string)
+
+
+decodeGuideItem : Decoder (List Station)
+decodeGuideItem =
+    list decodeStation
+
+
+decodeStations : Decoder (List (List Station))
 decodeStations =
-    succeed []
+    at [ "payload", "ContainerGuideItems", "containers" ]
+        (list (at [ "GuideItems" ] decodeGuideItem))
 
 
 getStations : Cmd Msg

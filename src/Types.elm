@@ -4,11 +4,11 @@ import Http
 
 
 type alias Station =
-    String
+    { title : String }
 
 
 type alias Answer =
-    List Station
+    List (List Station)
 
 
 type Msg
